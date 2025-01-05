@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decrypt Message</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #4c6ef5;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: #4c6ef5;
+            background-color: #fff;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #4c6ef5;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #3651b6;
+        }
+
+            .logo {
+            position: absolute;
+            top: 50%;
+            right: 140px;
+            transform: translateY(-50%);
+            width: 180px;
+            height: auto;
+        }
+
+          .footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+            .footer {
+                font-size: 0.8rem;
+            }
+        }
+
+    </style>
+</head>
+
+<body style="background: url(ss.jpg) !important; background-size:2000px !important;">
+    <div class="container">
+        <h1>Decrypt Message</h1>
+        <textarea id="encryptedMessage" rows="4" placeholder="Paste the encrypted message here..."></textarea>
+        <button id="decryptMessage">Decrypt</button>
+    </div>
+
+    <img src="logo.png" alt="Logo" class="logo">
+    <div class="footer">© 2024 Encrypt Inc. All rights reserved.</div>
+
+    <script>
+        const decryptMessageButton = document.getElementById('decryptMessage');
+        const encryptedMessageInput = document.getElementById('encryptedMessage');
+
+        // Decode timing symbols back to binary
+        function decodeTimingChannel(timingData) {
+            return timingData.replace(/H/g, '1').replace(/L/g, '0');
+        }
+
+        // Convert binary back to text
+        function binaryToMessage(binaryData) {
+            const chars = [];
+            for (let i = 0; i < binaryData.length; i += 8) {
+                const byte = binaryData.slice(i, i + 8);
+                if (byte === '00000000') break; // Null terminator
+                chars.push(String.fromCharCode(parseInt(byte, 2)));
+            }
+            return chars.join('');
+        }
+
+        // Decrypt the message
+        function decryptMessage(encryptedMessage) {
+            const binaryData = decodeTimingChannel(encryptedMessage); // Decode timing symbols
+            return binaryToMessage(binaryData); // Convert binary to text
+        }
+
+        // Event listener for decrypt button
+        decryptMessageButton.addEventListener('click', () => {
+            const encryptedMessage = encryptedMessageInput.value.trim();
+
+            if (!encryptedMessage) {
+                alert('Please enter an encrypted message.');
+                return;
+            }
+
+            // Decrypt the message
+            const decryptedMessage = decryptMessage(encryptedMessage);
+            alert(`Decrypted Message: ${decryptedMessage}`);
+
+            // Clear the input field
+            encryptedMessageInput.value = '';
+        });
+    </script>
+</body>
+</html>

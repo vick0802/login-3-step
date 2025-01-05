@@ -44,7 +44,7 @@ function verifyStep1() {
     document.querySelector('#msg').style.display = 'none';
 
      // Redirect to the decrypt page
-    window.location.href = "dencrypt.html";
+    window.location.href = "Decryption.html";
   },5000);
 
       } else {
