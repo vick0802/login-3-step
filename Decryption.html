@@ -1,157 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decrypt Message</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Decrypt Message</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f7fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
-        }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+      padding: 10px;
+    }
 
-        .container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            padding: 30px;
-            text-align: center;
-        }
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      text-align: center;
+    }
 
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #4c6ef5;
-        }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #4c6ef5;
+    }
 
-        textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0 20px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            background-color: #fafafa;
-            transition: all 0.3s ease;
-        }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0 20px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      background-color: #fafafa;
+      transition: all 0.3s ease;
+    }
 
-        textarea:focus {
-            border-color: #4c6ef5;
-            background-color: #fff;
-            outline: none;
-        }
+    textarea:focus {
+      border-color: #4c6ef5;
+      background-color: #fff;
+      outline: none;
+    }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: #4c6ef5;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #4c6ef5;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-        button:hover {
-            background-color: #3651b6;
-        }
+    button:hover {
+      background-color: #3651b6;
+    }
 
-            .logo {
-            position: absolute;
-            top: 50%;
-            right: 140px;
-            transform: translateY(-50%);
-            width: 180px;
-            height: auto;
-        }
+    .logo {
+      position: absolute;
+      top: 50%;
+      right: 140px;
+      transform: translateY(-50%);
+      width: 180px;
+      height: auto;
+    }
 
-          .footer {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #777;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-top: 1px solid #ddd;
-        }
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-top: 1px solid #ddd;
+    }
 
-            .footer {
-                font-size: 0.8rem;
-            }
-        }
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
 
-    </style>
+    #decryptedModal {
+      background: white;
+      border-radius: 10px;
+      padding: 30px 40px;
+      text-align: center;
+      font-size: 1.1rem;
+      max-width: 400px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.3);
+      color: #333;
+      white-space: pre-wrap;
+      opacity: 0;
+      transform: scale(0.9);
+      animation: fadeInScale 0.4s ease forwards;
+    }
+
+    .fadeOut {
+      animation: fadeOutScale 0.6s ease forwards;
+    }
+
+    @keyframes fadeInScale {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeOutScale {
+      to {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .logo {
+        top: 50px;
+        right: 10px;
+        max-width: 20%;
+      }
+
+      button {
+        font-size: 1rem;
+        padding: 12px;
+      }
+
+      textarea {
+        font-size: 0.9rem;
+        padding: 10px;
+      }
+
+      .footer {
+        font-size: 0.8rem;
+      }
+
+      #decryptedModal {
+        padding: 20px;
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 
-<body style="background: url(ss.jpg) !important; background-size:2000px !important;">
-    <div class="container">
-        <h1>Decrypt Message</h1>
-        <textarea id="encryptedMessage" rows="4" placeholder="Paste the encrypted message here..."></textarea>
-        <button id="decryptMessage">Decrypt</button>
+<body style="background: url(ss.jpg) !important; background-size:cover !important;">
+  <div class="container">
+    <h1>Decrypt Message</h1>
+    <textarea id="encryptedMessage" rows="4" placeholder="Paste the encrypted message here..."></textarea>
+    <button id="decryptMessage">Decrypt</button>
+  </div>
+
+  <!-- Modal and Overlay -->
+  <div id="overlay">
+    <div id="decryptedModal">
+      <div id="messageText"></div>
     </div>
+  </div>
 
-    <img src="logo.png" alt="Logo" class="logo">
-    <div class="footer">© 2024 Encrypt Inc. All rights reserved.</div>
+  <img src="logo.png" alt="Logo" class="logo" />
+  <div class="footer">© 2024 Encrypt Inc. All rights reserved.</div>
 
-    <script>
-        const decryptMessageButton = document.getElementById('decryptMessage');
-        const encryptedMessageInput = document.getElementById('encryptedMessage');
+  <script>
+    const decryptMessageButton = document.getElementById('decryptMessage');
+    const encryptedMessageInput = document.getElementById('encryptedMessage');
+    const overlay = document.getElementById('overlay');
+    const modal = document.getElementById('decryptedModal');
+    const messageText = document.getElementById('messageText');
 
-        // Decode timing symbols back to binary
-        function decodeTimingChannel(timingData) {
-            return timingData.replace(/H/g, '1').replace(/L/g, '0');
-        }
+    function decodeTimingChannel(timingData) {
+      return timingData.replace(/H/g, '1').replace(/L/g, '0');
+    }
 
-        // Convert binary back to text
-        function binaryToMessage(binaryData) {
-            const chars = [];
-            for (let i = 0; i < binaryData.length; i += 8) {
-                const byte = binaryData.slice(i, i + 8);
-                if (byte === '00000000') break; // Null terminator
-                chars.push(String.fromCharCode(parseInt(byte, 2)));
-            }
-            return chars.join('');
-        }
+    function binaryToMessage(binaryData) {
+      const chars = [];
+      for (let i = 0; i < binaryData.length; i += 8) {
+        const byte = binaryData.slice(i, i + 8);
+        if (byte === '00000000') break;
+        chars.push(String.fromCharCode(parseInt(byte, 2)));
+      }
+      return chars.join('');
+    }
 
-        // Decrypt the message
-        function decryptMessage(encryptedMessage) {
-            const binaryData = decodeTimingChannel(encryptedMessage); // Decode timing symbols
-            return binaryToMessage(binaryData); // Convert binary to text
-        }
+    function decryptMessage(encryptedMessage) {
+      const binaryData = decodeTimingChannel(encryptedMessage);
+      return binaryToMessage(binaryData);
+    }
 
-        // Event listener for decrypt button
-        decryptMessageButton.addEventListener('click', () => {
-            const encryptedMessage = encryptedMessageInput.value.trim();
+    function showModal(message) {
+      messageText.innerText = `Decrypted Message:\n${message}`;
+      overlay.style.display = 'flex';
 
-            if (!encryptedMessage) {
-                alert('Please enter an encrypted message.');
-                return;
-            }
+      // Fade out modal in last 2 seconds
+      setTimeout(() => {
+        modal.classList.add('fadeOut');
+      }, 8000);
 
-            // Decrypt the message
-            const decryptedMessage = decryptMessage(encryptedMessage);
-            alert(`Decrypted Message: ${decryptedMessage}`);
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        location.replace('./Encrypt/index.html');
+      }, 10000);
+    }
 
-            // Clear the input field
-            encryptedMessageInput.value = '';
-        });
-    </script>
+    decryptMessageButton.addEventListener('click', () => {
+      const encryptedMessage = encryptedMessageInput.value.trim();
+
+      if (!encryptedMessage) {
+        alert('Please enter an encrypted message.');
+        return;
+      }
+
+      const decryptedMessage = decryptMessage(encryptedMessage);
+      encryptedMessageInput.value = '';
+      showModal(decryptedMessage);
+    });
+  </script>
 </body>
 </html>

@@ -1,57 +1,126 @@
- function showStep(step) {
+function showStep(step) {
+  document.getElementById("step1").style.display = "none";
+  document.getElementById("step2").style.display = "none";
+  document.getElementById("step3").style.display = "none";
+  document.getElementById(step).style.display = "block";
+}
 
-      document.getElementById("step1").style.display = "none";
-      document.getElementById("step2").style.display = "none";
-      document.getElementById("step3").style.display = "none";
+const LOCKOUT_DURATION = 30 * 1000; // 30 second lockout
+const MAX_ATTEMPTS = 3;
 
-      document.getElementById(step).style.display = "block";
+// Show full-page overlay with countdown timer
+function showLockOverlay(duration, stepKey = null) {
+  const overlay = document.getElementById("lockOverlay");
+  const timer = document.getElementById("lockTimer");
+  overlay.style.display = "block";
+
+  let remaining = Math.floor(duration / 1000);
+
+  const countdown = setInterval(() => {
+    if (remaining <= 0) {
+      clearInterval(countdown);
+      overlay.style.display = "none";
+
+      // Reset attempts and lockout
+      if (stepKey) {
+        localStorage.removeItem(`${stepKey}_attempts`);
+        localStorage.removeItem(`${stepKey}_lockoutUntil`);
+      }
+    } else {
+      let mins = Math.floor(remaining / 60);
+      let secs = remaining % 60;
+      timer.textContent = `Time remaining: ${mins}:${secs.toString().padStart(2, '0')}`;
+      remaining--;
     }
+  }, 1000);
+}
 
+// Check if a step is locked out
+function checkLockout(stepKey) {
+  const lockoutUntil = parseInt(localStorage.getItem(`${stepKey}_lockoutUntil`)) || 0;
+  const now = Date.now();
+
+  if (now < lockoutUntil) {
+    showLockOverlay(lockoutUntil - now, stepKey);
+    return true;
+  }
+
+  return false;
+}
+
+// Handle failed attempt
+function handleFailure(stepKey) {
+  let attempts = parseInt(localStorage.getItem(`${stepKey}_attempts`)) || 0;
+  attempts++;
+  localStorage.setItem(`${stepKey}_attempts`, attempts);
+
+  if (attempts >= MAX_ATTEMPTS) {
+    const lockoutUntil = Date.now() + LOCKOUT_DURATION;
+    localStorage.setItem(`${stepKey}_lockoutUntil`, lockoutUntil);
+    showLockOverlay(LOCKOUT_DURATION, stepKey);
+    alert("Too many failed attempts. Login locked for 30 Seconds.");
+    return true;
+  } else {
+    alert(`Incorrect. Attempts remaining: ${MAX_ATTEMPTS - attempts}`);
+    return false;
+  }
+}
+
+// Reset lockout after success
+function resetLockout(stepKey) {
+  localStorage.removeItem(`${stepKey}_attempts`);
+  localStorage.removeItem(`${stepKey}_lockoutUntil`);
+}
+
+// Step 1: Username & Password
 function verifyStep1() {
-      var username = document.getElementById("username").value;
-      var password = document.getElementById("password").value;
+  if (checkLockout("step1")) return;
 
-      // Validate username and password
-      if (username === "admin" && password === "password") {
-        document.getElementById("step1").style.display = "none";
-        document.getElementById("step2").style.display = "block";
-      } else {
-        alert("Invalid username or password. Please try again.");
-      }
-    }
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
-    function verifyStep2() {
-      var code = document.getElementById("code").value;
+  if (username === "admin" && password === "password") {
+    resetLockout("step1");
+    showStep("step2");
+  } else {
+    handleFailure("step1");
+  }
+}
 
-      // Validate verification code
-      if (code === "123456") {
-        document.getElementById("step2").style.display = "none";
-        document.getElementById("step3").style.display = "block";
-      } else {
-        alert("Invalid verification code. Please try again.");
-      }
-    }
+// Step 2: Verification Code
+function verifyStep2() {
+  if (checkLockout("step2")) return;
 
-    function verifyStep3() {
-      var securityAnswer = document.getElementById("security-answer").value;
+  const code = document.getElementById("code").value;
 
-      // Validate security question and answer
-      if (securityAnswer === "blue") {
-          document.querySelector('#msg').style.display = 'block';
+  if (code === "123456") {
+    resetLockout("step2");
+    showStep("step3");
+  } else {
+    handleFailure("step2");
+  }
+}
 
-  // Hide alert after 5 seconds
-  setTimeout(function(){
-    document.querySelector('#msg').style.display = 'none';
+// Step 3: Security Question
+function verifyStep3() {
+  if (checkLockout("step3")) return;
 
-     // Redirect to the decrypt page
-    window.location.href = "Decryption.html";
-  },5000);
+  const securityAnswer = document.getElementById("security-answer").value;
 
-      } else {
-        alert("Invalid security question or answer. Please try again.");
-      }
-    }
+  if (securityAnswer === "blue") {
+    resetLockout("step3");
+    document.querySelector('#msg').style.display = 'block';
 
-    function goBack(step) {
-      showStep(step);
-    }
+    setTimeout(function () {
+      document.querySelector('#msg').style.display = 'none';
+      window.location.href = "Decryption.html";
+    }, 5000);
+  } else {
+    handleFailure("step3");
+  }
+}
+
+// Go back to previous step
+function goBack(step) {
+  showStep(step);
+}

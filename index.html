@@ -36,11 +36,39 @@
             #username,#password,#code,#security-answer{
                 background-color: #f2f2f2 !important;
             }
+
+            #lockOverlay {
+                  display: none;
+                  position: fixed;
+                  z-index: 9999;
+                  top: 0; left: 0;
+                  width: 100vw;
+                  height: 100vh;
+                  background-color: rgba(0,0,0,0.8);
+                  color: white;
+                  font-size: 2rem;
+                  font-weight: bold;
+                  text-align: center;
+                  padding-top: 20%;
+}
+
+        #lockTimer {
+          font-size: 1.5rem;
+          margin-top: 20px;
+        }
+
     </style>
 
 </head>
 
 <body style="background: url(ss.jpg) !important; background-size:2000px !important;">
+
+    <div id="lockOverlay">
+  🔒 Login locked.<br>
+  Please wait...<br>
+  <div id="lockTimer"></div>
+</div>
+
 
     <div class="container login-form" id="step1">
         <div class="row mt-5 justify-content-center"> 

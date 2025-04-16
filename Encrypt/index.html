@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Message Sender</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+              * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            position: relative;
+        }
+
+        .header {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            font-size: 1.5rem;
+            color: #4c6ef5;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            top: 50%;
+            right: 140px;
+            transform: translateY(-50%);
+            width: 180px;
+            height: auto;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #4c6ef5;
+        }
+
+        input[type="email"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        input[type="email"]:focus, textarea:focus {
+            border-color: #4c6ef5;
+            background-color: #fff;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #4c6ef5;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #3651b6;
+        }
+
+        .loading {
+            display: none;
+            margin: 20px auto;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e0e0e0;
+            border-top: 5px solid #4c6ef5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .marquee {
+            margin: 20px 0;
+            font-size: 1rem;
+            color: #4c6ef5;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee span {
+            display: inline-block;
+            animation: marquee 10s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        @media (max-width: 600px) { /*Responsive for Mobile*/
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .footer {
+                font-size: 0.8rem;
+            }
+
+            .header {
+                font-size: 1.2rem;
+                top: 20px;
+                left: 20px;
+            }
+
+            .logo {
+                top: 50px;
+                right: 10px;
+                max-width: 20%;
+            }
+
+            input[type="email"], textarea {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 12px;
+            }
+        }
+
+    </style>
+
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init({
+                publicKey: "SHksMhEs4Iwd4OlgI",
+            });
+        })();
+    </script>
+</head>
+<body style="background: url(ss.jpg) !important; background-size: cover !important;">
+    <div class="header">Encrypt Data</div>
+    <div class="container">
+        <h1>Send Secure Message</h1>
+        <input type="email" id="email" placeholder="Recipient's Email" required>
+        <textarea id="message" rows="4" placeholder="Type your message here..."></textarea>
+        <button id="sendMessage">Send</button>
+        <div class="loading" id="loading"></div>
+        <p id="statusMessage"></p>
+        <div class="marquee"><span>Messages can be sent to different email addresses seamlessly!</span></div>
+    </div>
+    <img src="logo.png" alt="Logo" class="logo">
+    <div class="footer">© 2024 Encrypt Inc. All rights reserved.</div>
+    <script src="java2.js"></script>
+</body>
+</html>
